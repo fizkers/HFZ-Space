@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFZ Link | Personalized Bio Link</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #ffffff;
+            --accent-color: #38bdf8;
+            --panel-bg: #1e293b;
+            --border-color: #334155;
+        }
+
+        /* Custom Scrollbar Transparan */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            flex: 1;
+        }
+
+        /* Profile Area */
+        .profile {
+            margin-bottom: 30px;
+        }
+        .profile-img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .profile h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .profile p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        /* Links Area */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .btn-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .btn-link i {
+            position: absolute;
+            left: 20px;
+            font-size: 1.25rem;
+        }
+        .btn-link:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+        }
+
+        /* Style Model Tombol */
+        .shape-rect { border-radius: 0px; }
+        .shape-soft { border-radius: 12px; }
+        .shape-pill { border-radius: 50px; }
+        .shape-outline { 
+            background: transparent !important; 
+            border: 2px solid currentColor; 
+        }
+
+        footer {
+            margin-top: auto;
+            font-size: 0.8rem;
+            color: #64748b;
+            padding-top: 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 480px;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+        }
+        .footer-links a:hover { color: var(--accent-color); }
+        .secret-trigger { cursor: pointer; user-select: none; }
+
+        /* Modal Layout */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--panel-bg);
+            padding: 25px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Form Components */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+        
+        /* Password Wrapper dengan Mata Profesional */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper .toggle-password-icon {
+            position: absolute;
+            right: 12px;
+            color: #64748b;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .password-wrapper .toggle-password-icon:hover {
+            color: var(--accent-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+        }
+        .form-control:focus { border-color: var(--accent-color); }
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-action.btn-blue { background: #3b82f6; }
+        .btn-action.btn-red { background: #ef4444; }
+
+        .tabs-admin {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .admin-item-list {
+            margin-top: 25px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .delete-item-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+        }
+
+        /* Toast UI kustom */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            background: #1e293b;
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            min-width: 280px;
+            border-left: 4px solid #3b82f6;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { border-left-color: #10b981; }
+        .toast.error { border-left-color: #ef4444; }
+        .toast i { font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="profile">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" alt="Profile" class="profile-img" id="displayImg">
+            <h1 id="displayName">HFZ Space</h1>
+            <p id="displayBio">Memuat data dari cloud...</p>
+        </div>
+
+        <div class="links-container" id="linksContainer"></div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Support</a>
+        </div>
+        <p>&copy; 2026 <span id="copyrightTrigger" class="secret-trigger">HFZ Company Office</span>. All Rights Reserved.</p>
+    </footer>
+
+    <div id="toast-container"></div>
+
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fa-solid fa-lock"></i> Admin Login</h3>
+                <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+            </div>
+
+            <div id="loginPanel">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email Admin</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="Masukkan email" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan password" required autocomplete="off">
+                            <i class="fa-solid fa-eye toggle-password-icon" onclick="togglePasswordVisibility('loginPassword', this)"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-action btn-blue">Masuk Dashboard</button>
+                </form>
+            </div>
+
+            <div id="dashboardPanel" style="display: none;">
+                <div class="tabs-admin">
+                    <button class="tab-btn active" onclick="switchTab('links-tab')" id="btn-links-tab">Kelola Link</button>
+                    <button class="tab-btn" onclick="switchTab('profile-tab')" id="btn-profile-tab">Edit Profil</button>
+                    <button class="tab-btn" onclick="switchTab('security-tab')" id="btn-security-tab">Ganti Password</button>
+                </div>
+
+                <div id="tab-links" class="tab-content">
+                    <form id="linkForm">
+                        <div class="form-group">
+                            <label>Nama Tombol</label>
+                            <input type="text" id="btnNama" class="form-control" placeholder="Contoh: Portfolio Project" required>
+                        </div>
+                        <div class="form-group">
+                            <label>URL / Link Tujuan</label>
+                            <input type="url" id="btnLink" class="form-control" placeholder="Contoh: https://..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ikon / Logo</label>
+                            <select id="btnIcon" class="form-control">
+                                <option value="fa-solid fa-link">🔗 Default Link</option>
+                                <option value="fa-brands fa-google-drive">💾 Google Drive</option>
+                                <option value="fa-solid fa-image">🖼️ Foto / Galeri</option>
+                                <option value="fa-brands fa-instagram">📸 Instagram</option>
+                                <option value="fa-brands fa-whatsapp">💬 WhatsApp</option>
+                                <option value="fa-brands fa-tiktok">🎵 TikTok</option>
+                                <option value="fa-brands fa-youtube">📺 YouTube</option>
+                                <option value="fa-brands fa-github">💻 GitHub</option>
+                                <option value="fa-solid fa-globe">🌐 Website</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Bentuk Tombol</label>
+                            <select id="btnShape" class="form-control">
+                                <option value="shape-soft">Slightly Rounded (Kotak Halus)</option>
+                                <option value="shape-pill">Pill (Melengkung Penuh)</option>
+                                <option value="shape-rect">Rectangle (Kotak Siku)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Gaya Warna</label>
+                            <select id="btnStyle" class="form-control">
+                                <option value="filled">Warna Blok Penuh</option>
+                                <option value="outline">Gaya Garis Tepi (Outline)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Warna Tombol</label>
+                            <input type="color" id="btnColor" class="form-control" value="#38bdf8" style="height: 40px; padding:2px;">
+                        </div>
+                        <button type="submit" class="btn-action">Tambah Tombol</button>
+                    </form>
+
+                    <div class="admin-item-list">
+                        <h4>Daftar Tombol Saat Ini</h4>
+                        <div id="adminLinksList" style="margin-top: 10px;"></div>
+                    </div>
+                </div>
+
+                <div id="tab-profile" class="tab-content" style="display: none;">
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label>Nama Pengguna</label>
+                            <input type="text" id="inputName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bio Singkat</label>
+                            <textarea id="inputBio" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>URL Foto Profil</label>
+                            <input type="url" id="inputImg" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn-action btn-blue">Simpan Perubahan Profil</button>
+                    </form>
+                </div>
+
+                <div id="tab-security" class="tab-content" style="display: none;">
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label>Password Saat Ini</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="oldPassword" class="form-control" placeholder="Masukkan password lama" required>
+                                <i class="fa-solid fa-eye toggle-password-icon" onclick="togglePasswordVisibility('oldPassword', this)"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Password Baru</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="newPassword" class="form-control" placeholder="Minimal 6 karakter" required>
+                                <i class="fa-solid fa-eye toggle-password-icon" onclick="togglePasswordVisibility('newPassword', this)"></i>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-action btn-red">Perbarui Kata Sandi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsl_n_kvd_n2KTbaITrEv9HcNy78ALovY",
+            authDomain: "hfz-space.firebaseapp.com",
+            databaseURL: "https://hfz-space-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hfz-space",
+            storageBucket: "hfz-space.firebasestorage.app",
+            messagingSenderId: "865430506400",
+            appId: "1:865430506400:web:45a8c63ce7b4475c0672c5",
+            measurementId: "G-7FC3RR4QQE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+
+        let linksData = [];
+        let profileData = {};
+        let isAuthenticated = false;
+
+        // --- GLOBAL TOAST SYSTEM ---
+        window.showToast = function(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '<i class="fa-solid fa-info-circle" style="color:#3b82f6"></i>';
+            if(type === 'success') icon = '<i class="fa-solid fa-circle-check" style="color:#10b981"></i>';
+            if(type === 'error') icon = '<i class="fa-solid fa-circle-exclamation" style="color:#ef4444"></i>';
+
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.add('show'); }, 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => { toast.remove(); }, 300);
+            }, 3500);
+        }
+
+        // --- EYE ICON INTERFACE FUNCTION ---
+        window.togglePasswordVisibility = function(fieldId, iconElement) {
+            const inputField = document.getElementById(fieldId);
+            if (inputField.type === "password") {
+                inputField.type = "text";
+                iconElement.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                inputField.type = "password";
+                iconElement.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+
+        // --- INITIAL CLOUD SINKING ---
+        onValue(ref(db, 'profile'), (snapshot) => {
+            if (snapshot.exists()) {
+                profileData = snapshot.val();
+            } else {
+                profileData = {
+                    name: "HFZ Space",
+                    bio: "Welcome to my personal links platform",
+                    img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150"
+                };
+                set(ref(db, 'profile'), profileData);
+            }
+            renderPage();
+        });
+
+        onValue(ref(db, 'links'), (snapshot) => {
+            if (snapshot.exists()) {
+                linksData = snapshot.val();
+            } else {
+                linksData = [
+                    { id: 1, nama: 'Instagram', link: 'https://instagram.com', icon: 'fa-brands fa-instagram', shape: 'shape-soft', style: 'filled', color: '#e1306c' }
+                ];
+                set(ref(db, 'links'), linksData);
+            }
+            renderPage();
+            if(isAuthenticated) renderAdminList();
+        });
+
+        function renderPage() {
+            document.getElementById('displayName').innerText = profileData.name || "HFZ Space";
+            document.getElementById('displayBio').innerText = profileData.bio || "";
+            document.getElementById('displayImg').src = profileData.img || "";
+
+            const container = document.getElementById('linksContainer');
+            container.innerHTML = '';
+            linksData.forEach(item => {
+                if(!item) return;
+                const a = document.createElement('a');
+                a.href = item.link;
+                a.target = '_blank';
+                a.className = `btn-link ${item.shape} ${item.style === 'outline' ? 'shape-outline' : ''}`;
+                
+                if(item.style === 'outline') {
+                    a.style.color = item.color;
+                } else {
+                    a.style.backgroundColor = item.color;
+                }
+                a.innerHTML = `<i class="${item.icon}"></i> ${item.nama}`;
+                container.appendChild(a);
+            });
+        }
+
+        function renderAdminList() {
+            const adminList = document.getElementById('adminLinksList');
+            adminList.innerHTML = '';
+            linksData.forEach(item => {
+                if(!item) return;
+                const div = document.createElement('div');
+                div.className = 'admin-item';
+                div.innerHTML = `
+                    <span><i class="${item.icon}"></i> ${item.nama}</span>
+                    <button class="delete-item-btn" data-id="${item.id}"><i class="fa-solid fa-trash"></i></button>
+                `;
+                adminList.appendChild(div);
+            });
+
+            document.querySelectorAll('.delete-item-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteLink(id);
+                });
+            });
+        }
+
+        // --- CONTROLLER EVENTS ---
+        let clickCount = 0;
+        document.getElementById('copyrightTrigger').addEventListener('click', function() {
+            clickCount++;
+            if (clickCount === 5) {
+                openAdminModal();
+                clickCount = 0;
+            }
+        });
+
+        window.openAdminModal = function() {
+            document.getElementById('adminModal').style.display = 'flex';
+            if (isAuthenticated) { showDashboard(); } else { showLogin(); }
+        }
+
+        window.closeAdminModal = function() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-lock"></i> Admin Login`;
+            document.getElementById('loginPanel').style.display = 'block';
+            document.getElementById('dashboardPanel').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-gear"></i> Admin Dashboard`;
+            document.getElementById('loginPanel').style.display = 'none';
+            document.getElementById('dashboardPanel').style.display = 'block';
+            
+            document.getElementById('inputName').value = profileData.name || '';
+            document.getElementById('inputBio').value = profileData.bio || '';
+            document.getElementById('inputImg').value = profileData.img || '';
+            
+            renderAdminList();
+        }
+
+        // --- SISTEM VALIDASI LOGIN DIRECT DATABASE ---
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const passwordInput = document.getElementById('loginPassword').value;
+
+            // Mengambil kredensial langsung dari node admin_account di Firebase
+            get(ref(db, 'admin_account')).then((snapshot) => {
+                if(snapshot.exists()) {
+                    const cloudAccount = snapshot.val();
+                    if(emailInput === cloudAccount.email && passwordInput === cloudAccount.password) {
+                        isAuthenticated = true;
+                        document.getElementById('loginForm').reset();
+                        showDashboard();
+                        window.showToast('Selamat Datang Kembali, Admin!', 'success');
+                    } else {
+                        window.showToast('Email atau Password salah!', 'error');
+                    }
+                } else {
+                    window.showToast('Akun admin belum dibuat di database cloud.', 'error');
+                }
+            }).catch(() => {
+                window.showToast('Terjadi gangguan jaringan database.', 'error');
+            });
+        });
+
+        // --- HUB SECURITY TAB: FITUR GANTI PASSWORD BARU ---
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const oldPass = document.getElementById('oldPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+
+            if(newPass.length < 6) {
+                window.showToast('Password baru harus minimal 6 karakter!', 'error');
+                return;
+            }
+
+            get(ref(db, 'admin_account')).then((snapshot) => {
+                if(snapshot.exists()) {
+                    const currentAccount = snapshot.val();
+                    if(oldPass === currentAccount.password) {
+                        // Jalankan update password baru ke Firebase cloud
+                        set(ref(db, 'admin_account/password'), newPass).then(() => {
+                            document.getElementById('passwordForm').reset();
+                            window.showToast('Password berhasil diperbarui di Cloud Database!', 'success');
+                        });
+                    } else {
+                        window.showToast('Password lama Anda salah!', 'error');
+                    }
+                }
+            });
+        });
+
+        // Tab Navigation
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            if(tabName === 'links-tab') {
+                document.getElementById('tab-links').style.display = 'block';
+                document.getElementById('btn-links-tab').classList.add('active');
+            } else if(tabName === 'profile-tab') {
+                document.getElementById('tab-profile').style.display = 'block';
+                document.getElementById('btn-profile-tab').classList.add('active');
+            } else {
+                document.getElementById('tab-security').style.display = 'block';
+                document.getElementById('btn-security-tab').classList.add('active');
+            }
+        }
+
+        // Save Profile Action
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const updatedProfile = {
+                name: document.getElementById('inputName').value,
+                bio: document.getElementById('inputBio').value,
+                img: document.getElementById('inputImg').value
+            };
+            set(ref(db, 'profile'), updatedProfile).then(() => {
+                window.showToast('Profil berhasil disimpan ke cloud!', 'success');
+            });
+        });
+
+        // Add Button Action
+        document.getElementById('linkForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newLink = {
+                id: Date.now(),
+                nama: document.getElementById('btnNama').value,
+                link: document.getElementById('btnLink').value,
+                icon: document.getElementById('btnIcon').value,
+                shape: document.getElementById('btnShape').value,
+                style: document.getElementById('btnStyle').value,
+                color: document.getElementById('btnColor').value
+            };
+            linksData.push(newLink);
+            set(ref(db, 'links'), linksData).then(() => {
+                document.getElementById('linkForm').reset();
+                window.showToast('Tombol berhasil disimpan ke cloud!', 'success');
+            });
+        });
+
+        // Delete Button Action
+        function deleteLink(id) {
+            linksData = linksData.filter(item => item && item.id !== id);
+            set(ref(db, 'links'), linksData).then(() => {
+                window.showToast('Tombol terhapus dari cloud.', 'info');
+            });
+        }
+    </script>
+</body>
+</html>
